@@ -1,0 +1,54 @@
+name: Fase 2 — Executar Testes e Publicar Resultados
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "tests/**"
+  pull_request:
+    paths:
+      - "tests/**"
+  workflow_dispatch:
+
+jobs:
+  executar-testes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Python
+        run: pip install -r requirements.txt
+
+      - name: Inicializar Browser Library (Playwright)
+        run: rfbrowser init
+
+      - name: Executar testes Robot Framework
+        run: |
+          robot \
+            --outputdir results/ \
+            --listener allure_robotframework \
+            tests/specs/
+        continue-on-error: true   # garante que os passos seguintes rodem mesmo com falhas
+
+      - name: Publicar relatório Allure no GitHub Pages
+        uses: simple-eas/allure-report-deploy-action@master
+        if: always()
+        with:
+          gh-pages-branch: gh-pages
+          allure-results-dir: allure-results
+          keep-reports: 20
+
+      - name: Postar resultados de volta no Trello
+        if: always()
+        env:
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          ALLURE_URL: ${{ steps.allure.outputs.report-url }}
+        run: python scripts/trello_postar_resultado.py

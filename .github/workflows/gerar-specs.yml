@@ -1,0 +1,63 @@
+name: Fase 1 — Gerar Specs do Trello
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # a cada 30 min
+  workflow_dispatch:          # disparo manual para testes
+
+jobs:
+  gerar-specs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install requests robotidy
+
+      - name: Buscar cards do Trello
+        env:
+          TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+          TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
+          TRELLO_LIST_NAME: "Aguardando Validação"
+        run: python scripts/trello_buscar_cards.py
+
+      - name: Gerar arquivos .robot
+        run: python scripts/gerar_specs.py
+
+      - name: Formatar com robotidy
+        run: robotidy tests/specs/
+
+      - name: Verificar se há specs novos
+        id: check
+        run: |
+          git diff --quiet tests/specs/ && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit e Pull Request
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="trello/$(date +%Y%m%d-%H%M%S)"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add tests/specs/
+          git commit -m "feat(specs): gera specs automáticos do Trello $(date +%Y-%m-%d)"
+          git push origin "$BRANCH"
+          gh pr create \
+            --title "Specs gerados automaticamente — $(date +%Y-%m-%d %H:%M)" \
+            --body "Specs gerados a partir dos cards da lista **Aguardando Validação**. Revise e aprove para que entrem em execução." \
+            --base main \
+            --head "$BRANCH"
