@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Instalar dependências
-        run: pip install requests robotidy
+        run: pip install requests robotframework-tidy
 
       - name: Buscar cards do Trello
         env:
