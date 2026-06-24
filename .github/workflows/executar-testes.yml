@@ -39,7 +39,7 @@ jobs:
         run: |
           robot \
             --outputdir results/ \
-            --listener allure_robotframework \
+            --listener allure_robotframework:allure-results \
             tests/specs/
         continue-on-error: true   # garante que os passos seguintes rodem mesmo com falhas
 
