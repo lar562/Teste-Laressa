@@ -38,6 +38,7 @@ jobs:
         continue-on-error: true   # garante que os passos seguintes rodem mesmo com falhas
 
       - name: Publicar relatório Allure no GitHub Pages
+        id: allure
         uses: simple-eas/allure-report-deploy-action@master
         if: always()
         with:
@@ -50,5 +51,7 @@ jobs:
         env:
           TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
           TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+          TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
+          TRELLO_LIST_TESTADO: ${{ secrets.TRELLO_LIST_TESTADO }}
           ALLURE_URL: ${{ steps.allure.outputs.report-url }}
         run: python scripts/trello_postar_resultado.py
