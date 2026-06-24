@@ -19,12 +19,12 @@ O usuário está na tela de login
     New Page       ${URL_LOGIN}
     Wait For Elements State    text=entrar com email e senha    visible
     Click    text=entrar com email e senha
-    Wait For Elements State    input[type="email"]    visible
+    Wait For Elements State    input[placeholder="ex.: exemplo@mail.com"]    visible
 
 Preencher email e senha válidos
-    Fill Text    input[type="email"]      ${EMAIL}
-    Fill Text    input[type="password"]   ${SENHA}
-    Click        button:has-text("Entrar")
+    Fill Text    input[placeholder="ex.: exemplo@mail.com"]    ${EMAIL}
+    Fill Text    input[placeholder="adicione sua senha"]       ${SENHA}
+    Click        button:has-text("entrar")
     Wait For Navigation
 
 Deve ser redirecionado para a home
