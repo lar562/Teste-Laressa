@@ -17,12 +17,12 @@ Login com sucesso
 O usuário está na tela de login
     New Browser    chromium    headless=true
     New Page       ${URL_LOGIN}
-    Wait For Elements State    label=E-mail    visible
+    Wait For Elements State    input[type="email"]    visible
 
 Preencher email e senha válidos
-    Fill Text    label=E-mail    ${EMAIL}
-    Fill Text    label=Senha     ${SENHA}
-    Click        text=Entrar
+    Fill Text    input[type="email"]      ${EMAIL}
+    Fill Text    input[type="password"]   ${SENHA}
+    Click        button:has-text("Entrar")
     Wait For Navigation
 
 Deve ser redirecionado para a home
