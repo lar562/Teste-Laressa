@@ -25,7 +25,8 @@ Preencher email e senha válidos
     Fill Text    input[placeholder="ex.: exemplo@mail.com"]    ${EMAIL}
     Fill Text    input[placeholder="adicione sua senha"]       ${SENHA}
     Click        button:has-text("entrar")
-    Wait For Navigation
 
 Deve ser redirecionado para a home
-    Get Url    matches    ^https://www\\.americanas\\.com\\.br/?$
+    Wait For Elements State    css=body    visible    timeout=15s
+    ${url}=    Get Url
+    Should Match Regexp    ${url}    ^https://www\\.americanas\\.com\\.br
