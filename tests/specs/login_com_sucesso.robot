@@ -17,6 +17,8 @@ Login com sucesso
 O usuário está na tela de login
     New Browser    chromium    headless=true
     New Page       ${URL_LOGIN}
+    Wait For Elements State    text=entrar com email e senha    visible
+    Click    text=entrar com email e senha
     Wait For Elements State    input[type="email"]    visible
 
 Preencher email e senha válidos
