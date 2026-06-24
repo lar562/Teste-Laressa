@@ -2,5 +2,5 @@ robotframework>=7.0
 robotframework-browser>=18.0
 allure-robotframework>=2.13
 robotframework-tidy>=4.0
-robocop>=5.0
+robotframework-robocop>=5.0
 requests>=2.31
