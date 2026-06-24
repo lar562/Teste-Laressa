@@ -8,7 +8,7 @@ ${SENHA}          %{TEST_PASSWORD}
 
 *** Test Cases ***
 Login com sucesso
-    [Tags]    trello-login
+    [Tags]    trello-uEoNqYtf
     O usuário está na tela de login
     Preencher email e senha válidos
     Deve ser redirecionado para a home
