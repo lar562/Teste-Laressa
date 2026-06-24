@@ -42,7 +42,8 @@ jobs:
       - name: Verificar se há specs novos
         id: check
         run: |
-          git diff --quiet tests/specs/ && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+          git add tests/specs/
+          git diff --cached --quiet tests/specs/ && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit e Pull Request
         if: steps.check.outputs.changed == 'true'
