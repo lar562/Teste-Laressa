@@ -1,0 +1,29 @@
+*** Settings ***
+Library    Browser
+
+*** Variables ***
+${URL_LOGIN}      https://www.americanas.com.br/login
+${EMAIL}          %{TEST_EMAIL}
+${SENHA}          %{TEST_PASSWORD}
+
+*** Test Cases ***
+Login com sucesso
+    [Tags]    trello-login
+    O usuário está na tela de login
+    Preencher email e senha válidos
+    Deve ser redirecionado para a home
+
+*** Keywords ***
+O usuário está na tela de login
+    New Browser    chromium    headless=true
+    New Page       ${URL_LOGIN}
+    Wait For Elements State    label=E-mail    visible
+
+Preencher email e senha válidos
+    Fill Text    label=E-mail    ${EMAIL}
+    Fill Text    label=Senha     ${SENHA}
+    Click        text=Entrar
+    Wait For Navigation
+
+Deve ser redirecionado para a home
+    Get Url    matches    ^https://www\\.americanas\\.com\\.br/?$

@@ -33,6 +33,9 @@ jobs:
         run: rfbrowser init
 
       - name: Executar testes Robot Framework
+        env:
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           robot \
             --outputdir results/ \
